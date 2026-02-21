@@ -56,6 +56,11 @@ func main() {
 		fmt.Println("Error saving todo:", err)
 		return
 	}
+	printSometing(3.1)
+	maxValue := max(1, 2)
+	fmt.Println("Max value:", maxValue)
+	maxValueFloat := max(2.1, 3.2)
+	fmt.Println("Max value:", maxValueFloat)
 
 	fmt.Println("Note saved successfully!")
 }
@@ -83,4 +88,33 @@ func outputData(data outputter) error {
 	data.Display()
 	// return data.Save()
 	return saveData(data)
+}
+
+// func printSometing(val interface{}) {
+func printSometing(val any) {
+	switch val.(type) {
+	case int:
+		fmt.Println("Integer", val)
+	case float64:
+		fmt.Println("Float", val)
+	case string:
+		fmt.Println("String", val)
+	default:
+		fmt.Println("Unknown type")
+	}
+
+	typedVal, ok := val.(int)
+
+	if ok {
+		fmt.Println("Integer", typedVal)
+	}
+
+}
+
+// generic
+func max[T int | float32 | float64](a, b T) T {
+	if a > b {
+		return a
+	}
+	return b
 }
