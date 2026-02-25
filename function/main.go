@@ -16,13 +16,17 @@ func main() {
 	})
 
 	quintupleFn := createTransformer(5)
+	sextupleFn := createTransformer(6)
 
 	quintupledNumber := transformNumber(&numbers, quintupleFn)
+	// sextupledNumber := variadicTransformer(quintupleFn, numbers...)
+	sextupledNumber := variadicTransformer(sextupleFn, 1, 2, 3, 4, 5)
 
 	fmt.Println(doubledNumber)
 	fmt.Println(tripledNumber)
 	fmt.Println(quadrupledNumber)
 	fmt.Println(quintupledNumber)
+	fmt.Println(sextupledNumber)
 }
 
 func transformNumber(numbers *[]int, function typeFn) []int {
@@ -47,4 +51,8 @@ func createTransformer(factor int) typeFn {
 	return func(number int) int {
 		return number * factor
 	}
+}
+
+func variadicTransformer(function typeFn, numbers ...int) []int {
+	return transformNumber(&numbers, function)
 }
