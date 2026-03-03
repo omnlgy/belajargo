@@ -9,6 +9,11 @@ type TaxRate struct {
 	Rates []int64 `json:"rates"`
 }
 
+type TaxResult struct {
+	Percentage string
+	Prices     []string
+}
+
 func Get() (TaxRate, error) {
 	data, err := os.ReadFile("./saveFiles/taxRates.json")
 

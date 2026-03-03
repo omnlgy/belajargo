@@ -28,7 +28,7 @@ func main() {
 	prices := priceJson.Prices
 	taxRates := taxJson.Rates
 
-	result := make(map[string][]string, len(taxRates))
+	var result []tax.TaxResult
 
 	for _, taxRate := range taxRates {
 		listPriceWithTax := make([]string, len(prices))
@@ -39,9 +39,11 @@ func main() {
 			listPriceWithTax[priceIndex] = formatRupiah(priceWithTax)
 		}
 
-		stringPrecentage := bpsFormat(taxRate)
+		result = append(result, tax.TaxResult{
+			Percentage: bpsFormat(taxRate),
+			Prices:     listPriceWithTax,
+		})
 
-		result[stringPrecentage] = listPriceWithTax
 	}
 
 	fmt.Println(result)
