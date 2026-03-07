@@ -2,30 +2,18 @@ package price
 
 import (
 	"example.com/price-calculator/helper"
-	"example.com/price-calculator/ioManager"
 )
 
 type Price struct {
-	Prices        []int64             `json:"prices"`
-	TaxRate       int64               `json:"taxRate"`
-	PricesWithTax []int64             `json:"pricesWithTax"`
-	IOManager     ioManager.IOManager `json:"-"`
+	Prices        []int64
+	TaxRate       int64
+	PricesWithTax []int64
 }
 
-func New(ioManager ioManager.IOManager) (Price, error) {
-	var data Price
-	err := ioManager.Get(&data)
-
-	if err != nil {
-		return Price{}, err
-	}
-
+func New(prices []int64) Price {
 	return Price{
-		Prices:        data.Prices,
-		TaxRate:       data.TaxRate,
-		PricesWithTax: data.PricesWithTax,
-		IOManager:     ioManager,
-	}, nil
+		Prices: prices,
+	}
 }
 
 func (p *Price) CalculatePricesWithTax(taxRate int64) {
@@ -39,7 +27,7 @@ func (p *Price) CalculatePricesWithTax(taxRate int64) {
 	p.PricesWithTax = pricesWithTax
 }
 
-func (p *Price) Save(fileName string) error {
+func (p *Price) FormatData() any {
 	var formatedData struct {
 		Prices        []string `json:"prices"`
 		TaxRate       string   `json:"taxRate"`
@@ -61,5 +49,5 @@ func (p *Price) Save(fileName string) error {
 	formatedData.TaxRate = helper.BpsFormat(p.TaxRate)
 	formatedData.PricesWithTax = formatedPricesWithTax
 
-	return p.IOManager.WriteResult(fileName, formatedData)
+	return formatedData
 }

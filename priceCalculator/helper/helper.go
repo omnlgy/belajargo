@@ -10,6 +10,8 @@ import (
 const taxScale int64 = 10000
 const moneyScale int64 = 100
 
+type InputData struct{ Prices []int64 }
+
 func ApplyTax(price int64, taxRate int64) int64 {
 	return price * (taxScale + taxRate) / taxScale
 }

@@ -11,20 +11,30 @@ type FileManager struct {
 	outputPath string
 }
 
-func (f FileManager) Get(dest any) error {
+func New(inputPath, outputPath string) FileManager {
+	return FileManager{
+		inputPath:  inputPath,
+		outputPath: outputPath,
+	}
+}
+
+func (f FileManager) Get() ([]int64, error) {
 	data, err := os.ReadFile(f.inputPath)
 
 	if err != nil {
-		return fmt.Errorf("Error read file %w", err)
+		return nil, fmt.Errorf("Error read file %w", err)
 	}
 
-	err = json.Unmarshal(data, dest)
+	var fileData struct {
+		Prices []int64 `json:"prices"`
+	}
+	err = json.Unmarshal(data, &fileData)
 
 	if err != nil {
-		return fmt.Errorf("Error unmarshal file %w", err)
+		return nil, fmt.Errorf("Error unmarshal file %w", err)
 	}
 
-	return nil
+	return fileData.Prices, nil
 }
 
 func (f FileManager) WriteResult(fileName string, v any) error {
@@ -41,11 +51,4 @@ func (f FileManager) WriteResult(fileName string, v any) error {
 	}
 
 	return nil
-}
-
-func New(inputPath, outputPath string) FileManager {
-	return FileManager{
-		inputPath:  inputPath,
-		outputPath: outputPath,
-	}
 }

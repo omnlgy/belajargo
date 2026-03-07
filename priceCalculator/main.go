@@ -1,34 +1,26 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
-	filemanager "example.com/price-calculator/fileManager"
-	"example.com/price-calculator/price"
+	// cmdmanager "example.com/price-calculator/cmdManager"
+
+	cmdmanager "example.com/price-calculator/cmdManager"
+	"example.com/price-calculator/service"
 )
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	taxRates := []int64{0, 100, 220, 3000, 45, 3400}
-	fm := filemanager.New("./saveFiles/prices.json", "./saveFiles/")
 
-	for _, taxRate := range taxRates {
-		price, err := price.New(fm)
+	cm := cmdmanager.New()
+	// fm := filemanager.New("./saveFiles/prices.json", "./saveFiles/")
+	ps := service.NewPriceService(cm)
 
-		if err != nil {
-			log.Println(err)
-			return
-		}
+	err := ps.Run(taxRates)
 
-		price.CalculatePricesWithTax(taxRate)
-
-		err = price.Save(fmt.Sprintf("prices_%d.json", taxRate))
-
-		if err != nil {
-			log.Println(err)
-			return
-		}
+	if err != nil {
+		log.Fatal(err)
 	}
 }

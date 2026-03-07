@@ -1,9 +1,8 @@
 package ioManager
 
 type IOManager interface {
-	// Get reads the input file or command line arguments and unmarshals its contents into dest.
-	// dest must be a pointer to the destination.
-	Get(dest any) error
-	// WriteResult writes the formatted data to a file.
+	// Get reads the input file or command line arguments and returns the prices.
+	Get() ([]int64, error)
+	// WriteResult writes the formatted data to a file or displayed on the comand line.
 	WriteResult(fileName string, v any) error
 }
