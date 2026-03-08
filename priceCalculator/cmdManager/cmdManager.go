@@ -29,14 +29,15 @@ func (c CmdManager) Get() ([]int64, error) {
 	return prices, nil
 }
 
-func (c CmdManager) WriteResult(_ string, v any) error {
+func (c CmdManager) WriteResult(_ string, v any, chErr chan error) {
 
 	jsonData, err := json.Marshal(v)
 
 	if err != nil {
-		return err
+		chErr <- err
+		return
 	}
 
 	fmt.Println("result:", string(jsonData))
-	return nil
+
 }

@@ -2,6 +2,7 @@ package helper
 
 import (
 	"fmt"
+	"runtime"
 
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
@@ -30,4 +31,10 @@ func BpsFormat(taxRate int64) string {
 	decimal := taxRate % 100
 
 	return fmt.Sprintf("%d.%.2d%%", integer, decimal)
+}
+
+func CallerName() string {
+	pc, _, _, _ := runtime.Caller(1)
+	fn := runtime.FuncForPC(pc)
+	return fn.Name()
 }

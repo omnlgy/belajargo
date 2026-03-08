@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
+
+	"example.com/price-calculator/helper"
 )
 
 type FileManager struct {
@@ -37,18 +40,21 @@ func (f FileManager) Get() ([]int64, error) {
 	return fileData.Prices, nil
 }
 
-func (f FileManager) WriteResult(fileName string, v any) error {
+func (f FileManager) WriteResult(fileName string, v any, chErr chan error) {
 	jsonData, err := json.Marshal(v)
 
 	if err != nil {
-		return fmt.Errorf("Error marshal file %w", err)
+		chErr <- fmt.Errorf("%s Error marshal file %w", helper.CallerName(), err)
+		return
 	}
 
+	time.Sleep(1 * time.Second)
 	err = os.WriteFile(f.outputPath+fileName, jsonData, 0644)
 
 	if err != nil {
-		return fmt.Errorf("Error write file %w", err)
+		chErr <- fmt.Errorf("%s Error write file %w", helper.CallerName(), err)
+		return
 	}
 
-	return nil
+	chErr <- nil
 }

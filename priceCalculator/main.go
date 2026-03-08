@@ -4,8 +4,7 @@ import (
 	"log"
 
 	// cmdmanager "example.com/price-calculator/cmdManager"
-
-	cmdmanager "example.com/price-calculator/cmdManager"
+	filemanager "example.com/price-calculator/fileManager"
 	"example.com/price-calculator/service"
 )
 
@@ -14,9 +13,9 @@ func main() {
 
 	taxRates := []int64{0, 100, 220, 3000, 45, 3400}
 
-	cm := cmdmanager.New()
-	// fm := filemanager.New("./saveFiles/prices.json", "./saveFiles/")
-	ps := service.NewPriceService(cm)
+	// cm := cmdmanager.New()
+	fm := filemanager.New("./saveFiles/prices.json", "./saveFiles/")
+	ps := service.NewPriceService(fm)
 
 	err := ps.Run(taxRates)
 

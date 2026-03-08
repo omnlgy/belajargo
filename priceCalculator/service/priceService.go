@@ -24,18 +24,24 @@ func (ps *PriceService) Run(taxRates []int64) error {
 		return err
 	}
 
+	errCh := make(chan error, len(taxRates))
+
 	p := price.New(prices)
 
 	for _, taxRate := range taxRates {
-
 		p.CalculatePricesWithTax(taxRate)
-
 		formatedData := p.FormatData()
 
-		err := ps.IO.WriteResult(fmt.Sprintf("prices_%d.json", taxRate), formatedData)
+		fileName := fmt.Sprintf("prices_%d.json", taxRate)
 
+		go ps.IO.WriteResult(fileName, formatedData, errCh)
+
+	}
+
+	for range taxRates {
+		err := <-errCh
 		if err != nil {
-			return fmt.Errorf("Error writing file %w", err)
+			return err
 		}
 	}
 
