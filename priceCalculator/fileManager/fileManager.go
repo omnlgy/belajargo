@@ -3,6 +3,7 @@ package filemanager
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"time"
 
@@ -48,7 +49,8 @@ func (f FileManager) WriteResult(fileName string, v any, chErr chan error) {
 		return
 	}
 
-	time.Sleep(1 * time.Second)
+	time.Sleep(time.Duration(rand.Intn(4)) * time.Second)
+
 	err = os.WriteFile(f.outputPath+fileName, jsonData, 0644)
 
 	if err != nil {

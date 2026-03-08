@@ -38,6 +38,8 @@ func (ps *PriceService) Run(taxRates []int64) error {
 
 	}
 
+	fmt.Println("beres dong, padahal masih proses")
+
 	for range taxRates {
 		err := <-errCh
 		if err != nil {
