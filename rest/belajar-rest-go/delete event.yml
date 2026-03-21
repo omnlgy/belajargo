@@ -1,0 +1,15 @@
+info:
+  name: delete event
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: 0.0.0.0:8080/events/489c6159-cbc5-4cde-afcc-fa4c3de60729
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

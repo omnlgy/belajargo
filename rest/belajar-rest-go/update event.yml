@@ -1,0 +1,25 @@
+info:
+  name: update event
+  type: http
+  seq: 3
+
+http:
+  method: PUT
+  url: 0.0.0.0:8080/events/f067468c-2343-460b-9530-26d1c5b1573f
+  body:
+    type: json
+    data: |-
+      {
+            "name": "body validation edit edit",
+            "description": "tes desctiption midleware body validation",
+            "location": "middleware",
+            "dateTime": "2026-01-02T15:04:05Z",
+            "userId": "08c433bf-0177-4c05-9257-4032b79b26b3"
+          }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
