@@ -5,18 +5,23 @@ info:
 
 http:
   method: POST
-  url: 0.0.0.0:8080/events/
+  url: http://localhost:8080//events/
+  headers:
+    - name: Authorization
+      value: ""
+      disabled: true
   body:
     type: json
     data: |-
       {
-        "description": "tes description2",
+        "description": "tes description lagi",
         "dateTime": "2026-01-02T15:04:05Z",
-        "description": "tes desctiption midleware body validation",
         "name": "body validation",
-        "location": "middleware"
+        "location": "location"
       }
-  auth: inherit
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlNTljNDU5Zi1mMjMyLTQ1ZGUtODA1Mi05ZDhmYTY4ZTRlNjgiLCJlbWFpbCI6ImlrYmFsQHRlcy5jb20iLCJleHAiOjE3NzUxNjk5OTMsImlhdCI6MTc3NTE0MTE5M30.dupbCMYWgcgjB4niXuXOj5BzI8ACpkwS1PLrIBHjM18
 
 settings:
   encodeUrl: true

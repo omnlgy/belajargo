@@ -1,11 +1,16 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
 	"example.com/rest/db"
 	"github.com/google/uuid"
+)
+
+var (
+	ErrNoRowsAffected = errors.New("no rows affected")
 )
 
 type Event struct {
@@ -15,6 +20,8 @@ type Event struct {
 	Location    string    `json:"location" binding:"required,alphanumspace"`
 	DateTime    time.Time `json:"dateTime" binding:"required"`
 	UserId      uuid.UUID `json:"userId"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
 func (e Event) Save() error {
@@ -42,7 +49,7 @@ func (e Event) Save() error {
 func GetAllEvents() ([]Event, error) {
 	var events []Event
 
-	rows, err := db.DB.Query("SELECT * FROM events")
+	rows, err := db.DB.Query("SELECT id, name, description, location, dateTime, userId, createdAt, updatedAt FROM events")
 
 	if err != nil {
 		return events, fmt.Errorf("failed to query events: %w", err)
@@ -53,7 +60,7 @@ func GetAllEvents() ([]Event, error) {
 	for rows.Next() {
 		var event Event
 
-		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserId)
+		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserId, &event.CreatedAt, &event.UpdatedAt)
 		if err != nil {
 			return events, fmt.Errorf("failed to scan event: %w", err)
 		}
@@ -67,7 +74,7 @@ func GetAllEvents() ([]Event, error) {
 func (e Event) Update() error {
 	query := `
 	UPDATE events 
-	SET name = ?, description = ?, location = ?, dateTime = ?, userId = ?
+	SET name = ?, description = ?, location = ?, dateTime = ?, userId = ?, updatedAt = ?
 	WHERE id = ?
 	`
 
@@ -79,14 +86,14 @@ func (e Event) Update() error {
 
 	defer stmt.Close()
 
-	result, err := stmt.Exec(e.Name, e.Description, e.Location, e.DateTime, e.UserId, e.ID)
+	result, err := stmt.Exec(e.Name, e.Description, e.Location, e.DateTime, e.UserId, time.Now(), e.ID)
 
 	if err != nil {
 		return fmt.Errorf("failed to execute the update query %w", err)
 	}
 
 	if affectedCount, _ := result.RowsAffected(); affectedCount == 0 {
-		return fmt.Errorf("no rows affected")
+		return ErrNoRowsAffected
 	}
 
 	return nil
@@ -105,8 +112,22 @@ func DeleteEvent(eventId uuid.UUID) error {
 	}
 
 	if affectedCount, _ := result.RowsAffected(); affectedCount == 0 {
-		return fmt.Errorf("no rows affected")
+		return ErrNoRowsAffected
 	}
 
 	return nil
+}
+
+func GetEventById(eventId uuid.UUID) (Event, error) {
+	var event Event
+
+	row := db.DB.QueryRow("SELECT id, name, description, location, dateTime, userId, createdAt, updatedAt FROM events WHERE id = ?", eventId)
+
+	err := row.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserId, &event.CreatedAt, &event.UpdatedAt)
+
+	if err != nil {
+		return event, fmt.Errorf("failed to scan event: %w", err)
+	}
+
+	return event, nil
 }

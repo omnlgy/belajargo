@@ -10,12 +10,12 @@ http:
     type: json
     data: |-
       {
-            "name": "body validation edit edit",
-            "description": "tes desctiption midleware body validation",
-            "location": "middleware",
-            "dateTime": "2026-01-02T15:04:05Z",
-            "userId": "08c433bf-0177-4c05-9257-4032b79b26b3"
-          }
+        "name": "body validation edit edit",
+        "description": "tes desctiption midleware body validation",
+        "location": "middleware",
+        "dateTime": "2026-01-02T15:04:05Z",
+        "userId": "08c433bf-0177-4c05-9257-4032b79b26b3"
+      }
   auth: inherit
 
 settings:
